@@ -1,0 +1,66 @@
+
+<div *ngIf="loading" class="state-message">Loading ticket...</div>
+
+<div *ngIf="!loading && ticket" class="ticket-detail">
+  <a routerLink="/tickets">&larr; Back to list</a>
+
+  <div class="header">
+    <h1>{{ ticket.reference }} — {{ ticket.title }}</h1>
+    <span class="status-badge">{{ ticket.status }}</span>
+    <span *ngIf="ticket.overdue" class="overdue-badge">Overdue</span>
+  </div>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <div class="info-grid">
+    <div><strong>Customer:</strong> {{ ticket.customerName }} ({{ ticket.customerEmail }})</div>
+    <div><strong>Priority:</strong> {{ ticket.priority }}</div>
+    <div><strong>Due date:</strong> {{ ticket.dueDate | date:'medium' }}</div>
+    <div><strong>Created:</strong> {{ ticket.createdDate | date:'medium' }}</div>
+    <div *ngIf="ticket.resolvedDate"><strong>Resolved:</strong> {{ ticket.resolvedDate | date:'medium' }}</div>
+    <div *ngIf="ticket.closedDate"><strong>Closed:</strong> {{ ticket.closedDate | date:'medium' }}</div>
+  </div>
+
+  <p class="description">{{ ticket.description }}</p>
+
+  <!-- Rule 5: closed tickets are read-only — actions, assignment, and the comment
+       form are hidden entirely rather than shown-but-disabled, which is a
+       stronger and clearer signal that nothing here can be changed. -->
+  <div class="actions" *ngIf="!isClosed">
+    <a [routerLink]="['/tickets', ticket.id, 'edit']" class="btn">Edit</a>
+    <button *ngFor="let s of allowedNextStatuses" (click)="changeStatus(s)" class="btn btn-primary">
+      Move to {{ s }}
+    </button>
+    <button (click)="deleteTicket()" class="btn btn-danger">Delete</button>
+  </div>
+  <p *ngIf="isClosed" class="closed-note">This ticket is closed and read-only.</p>
+
+  <div class="assignment" *ngIf="!isClosed">
+    <label>Assigned agent:</label>
+    <select [formControl]="assignedAgentControl">
+      <option value="">Unassigned</option>
+      <option *ngFor="let a of agents" [value]="a.id">{{ a.fullName }}</option>
+    </select>
+    <button (click)="assignAgent()" [disabled]="!assignedAgentControl.value">Assign</button>
+    <button (click)="unassignAgent()" [disabled]="!ticket.assignedAgentId">Unassign</button>
+  </div>
+  <div class="assignment" *ngIf="isClosed">
+    <strong>Assigned agent:</strong> {{ ticket.assignedAgentName || 'Unassigned' }}
+  </div>
+
+  <div class="comments">
+    <h2>Comments</h2>
+    <div *ngIf="ticket.comments.length === 0" class="state-message">No comments yet.</div>
+    <div *ngFor="let c of ticket.comments" class="comment">
+      <strong>{{ c.authorName }}</strong>
+      <span class="comment-date">{{ c.createdDate | date:'short' }}</span>
+      <p>{{ c.body }}</p>
+    </div>
+
+    <form *ngIf="!isClosed" [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+      <input type="text" formControlName="authorName" placeholder="Your name" />
+      <textarea formControlName="body" placeholder="Add a comment..."></textarea>
+      <button type="submit" [disabled]="commentForm.invalid">Add comment</button>
+    </form>
+  </div>
+</div>

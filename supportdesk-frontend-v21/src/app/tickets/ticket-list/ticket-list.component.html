@@ -1,0 +1,60 @@
+
+<div class="ticket-list">
+  <div class="header">
+    <h1>Tickets</h1>
+    <a routerLink="/tickets/new" class="btn btn-primary">+ New Ticket</a>
+  </div>
+
+  <div class="filters">
+    <input type="text" placeholder="Search by reference, title, or customer..." [formControl]="searchControl" />
+
+    <select [formControl]="statusControl">
+      <option value="">All statuses</option>
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+
+    <select [formControl]="priorityControl">
+      <option value="">All priorities</option>
+      <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+    </select>
+
+    <select [formControl]="agentControl">
+      <option value="">All agents</option>
+      <option *ngFor="let a of agents" [value]="a.id">{{ a.fullName }}</option>
+    </select>
+
+    <label class="checkbox">
+      <input type="checkbox" [formControl]="overdueOnlyControl" />
+      Overdue only
+    </label>
+  </div>
+
+  <div *ngIf="loading" class="state-message">Loading tickets...</div>
+  <div *ngIf="!loading && tickets.length === 0" class="state-message">No tickets match your filters.</div>
+
+  <table *ngIf="!loading && tickets.length > 0" class="ticket-table">
+    <thead>
+      <tr>
+        <th>Reference</th><th>Title</th><th>Customer</th><th>Priority</th>
+        <th>Status</th><th>Agent</th><th>Due date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of tickets" [class.overdue]="t.overdue" [routerLink]="['/tickets', t.id]">
+        <td>{{ t.reference }}</td>
+        <td>{{ t.title }}</td>
+        <td>{{ t.customerName }}</td>
+        <td>{{ t.priority }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.assignedAgentName || '—' }}</td>
+        <td>{{ t.dueDate | date:'short' }} <span *ngIf="t.overdue" class="overdue-badge">Overdue</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && totalCount > 0" class="pagination">
+    <button (click)="goToPage(page - 1)" [disabled]="page === 1">Previous</button>
+    <span>Page {{ page }} of {{ totalPages }} ({{ totalCount }} total)</span>
+    <button (click)="goToPage(page + 1)" [disabled]="page === totalPages">Next</button>
+  </div>
+</div>

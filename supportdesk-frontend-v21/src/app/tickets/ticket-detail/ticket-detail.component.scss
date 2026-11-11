@@ -1,0 +1,19 @@
+.ticket-detail {
+  padding: 1.5rem;
+  max-width: 800px;
+  .header { display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0; }
+  .status-badge { padding: 0.2rem 0.6rem; border-radius: 4px; background: #e5e7eb; font-size: 0.85rem; }
+  .overdue-badge { color: #c0392b; font-weight: 600; }
+  .error { color: #c0392b; background: #fdecea; padding: 0.5rem; border-radius: 4px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 1rem 0; }
+  .actions { display: flex; gap: 0.5rem; margin: 1rem 0; }
+  .closed-note { font-style: italic; color: #666; }
+  .assignment { display: flex; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+  .comments { margin-top: 2rem; }
+  .comment { border-bottom: 1px solid #eee; padding: 0.5rem 0; }
+  .comment-date { color: #999; font-size: 0.8rem; margin-left: 0.5rem; }
+  .comment-form { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; max-width: 400px; }
+  .btn { padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ccc; background: white; cursor: pointer; text-decoration: none; color: inherit; }
+  .btn-primary { background: #2563eb; color: white; border-color: #2563eb; }
+  .btn-danger { background: #dc2626; color: white; border-color: #dc2626; }
+}

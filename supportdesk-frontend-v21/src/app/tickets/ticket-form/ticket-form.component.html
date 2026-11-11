@@ -1,0 +1,41 @@
+<div class="ticket-form">
+  <a routerLink="/tickets">&larr; Cancel</a>
+  <h1>{{ isEditMode ? 'Edit Ticket' : 'New Ticket' }}</h1>
+
+  <p *ngIf="serverError" class="error">{{ serverError }}</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Title
+      <input type="text" formControlName="title" />
+      <span class="field-error" *ngIf="form.get('title')!.touched && form.get('title')!.invalid">Title is required.</span>
+    </label>
+
+    <label>
+      Description
+      <textarea formControlName="description"></textarea>
+      <span class="field-error" *ngIf="form.get('description')!.touched && form.get('description')!.invalid">Description is required.</span>
+    </label>
+
+    <label>
+      Customer name
+      <input type="text" formControlName="customerName" />
+      <span class="field-error" *ngIf="form.get('customerName')!.touched && form.get('customerName')!.invalid">Customer name is required.</span>
+    </label>
+
+    <label>
+      Customer email
+      <input type="email" formControlName="customerEmail" />
+      <span class="field-error" *ngIf="form.get('customerEmail')!.touched && form.get('customerEmail')!.invalid">A valid email is required.</span>
+    </label>
+
+    <label>
+      Priority
+      <select formControlName="priority">
+        <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="submitting">{{ isEditMode ? 'Save changes' : 'Create ticket' }}</button>
+  </form>
+</div>
